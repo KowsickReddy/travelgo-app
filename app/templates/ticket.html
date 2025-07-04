@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width:520px;background:rgba(255,255,255,0.98);">
+    <div class="card-header bg-info text-white rounded-top-4 d-flex align-items-center">
+      <i class="fa fa-ticket-alt me-2 fs-4"></i>
+      <span class="fw-bold fs-5">Your Ticket</span>
+    </div>
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-2 text-info">{{ service.name }}</h5>
+      <p class="mb-2">Booking ID: <span class="fw-bold">{{ booking.id }}</span></p>
+      <p class="mb-2">Passenger: <span class="fw-bold">{{ booking.user_name }}</span></p>
+      <p class="mb-2">Date: <span class="fw-bold">{{ booking.date }}</span></p>
+      <p class="mb-2">Amount Paid: <span class="fw-bold text-success">₹{{ booking.amount | default(0) | int | string | replace(',', ',') }}</span></p>
+      <div class="text-center mt-4">
+        {% if booking.status != 'Canceled' %}
+        <form method="POST" action="{{ url_for('main.cancel_booking', booking_id=booking.id) }}" onsubmit="return confirm('Are you sure you want to cancel this ticket?');">
+          <button type="submit" class="btn btn-danger w-100 mb-2"><i class="fa fa-times me-2"></i>Cancel Ticket</button>
+        </form>
+        {% else %}
+        <span class="badge bg-danger">Canceled</span>
+        {% endif %}
+      </div>
+      <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary w-100 mt-4 py-2 fs-5"><i class="fa fa-home me-2"></i>Back to Dashboard</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

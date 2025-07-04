@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh;">
+    <div class="card shadow-lg p-4 w-100" style="max-width:600px;">
+        <h1 class="mb-4 text-center fw-bold text-primary" style="font-size:2.2rem;">Find Your Perfect Trip</h1>
+        <form id="searchForm" method="POST" action="{{ url_for('main.search') }}">
+            {{ form.hidden_tag() }}
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">{{ form.destination.label(class="form-label fw-semibold") }} {{ form.destination(class="form-control form-control-lg") }}</div>
+                <div class="col-md-6">{{ form.date.label(class="form-label fw-semibold") }} {{ form.date(class="form-control form-control-lg") }}</div>
+            </div>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">{{ form.guests.label(class="form-label fw-semibold") }} {{ form.guests(class="form-control form-control-lg") }}</div>
+                <div class="col-md-6">{{ form.category.label(class="form-label fw-semibold") }}
+                    <div class="btn-group w-100" role="group">
+                        {% for value, label in form.category.choices %}
+                            <input type="radio" class="btn-check" name="category" id="cat-{{ value }}" value="{{ value }}" autocomplete="off" {% if form.category.data == value %}checked{% endif %}>
+                            <label class="btn btn-outline-primary" for="cat-{{ value }}">{{ label }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid mt-3">
+                {{ form.submit(class="btn btn-primary btn-lg fw-bold") }}
+            </div>
+        </form>
+    </div>
+    <div id="searchResults" class="w-100 mt-5"></div>
+</div>
+{% endblock %}

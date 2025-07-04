@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="text-center my-5">
+  <i class="fa fa-check-circle fa-4x text-success mb-3"></i>
+  <h2 class="fw-bold mb-3">Payment Successful!</h2>
+  <p class="lead">Your booking is confirmed. Thank you for choosing TravelGo.</p>
+  <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary mt-3">View My Bookings</a>
+</div>
+{% endblock %}

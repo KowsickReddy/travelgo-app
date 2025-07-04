@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="mb-4">Your Bookings</h1>
+<div class="mb-3">
+  <label class="form-check-label me-2">
+    <input type="checkbox" id="showCanceled" checked class="form-check-input"> Show canceled bookings
+  </label>
+</div>
+<div class="table-responsive">
+  <table class="table table-hover align-middle" id="bookingsTable">
+    <thead class="table-light">
+      <tr>
+        <th>Service</th>
+        <th>Destination</th>
+        <th>Date</th>
+        <th>Guests</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+      <tr data-status="{{ booking.status }}">
+        <td>{{ booking.category|capitalize }}</td>
+        <td>{{ booking.destination }}</td>
+        <td>{{ booking.date.strftime('%d %b %Y') }}</td>
+        <td>{{ booking.guests }}</td>
+        <td>
+          {% if booking.status == 'Confirmed' %}
+            <span class="badge bg-success">Confirmed</span>
+          {% else %}
+            <span class="badge bg-secondary">Canceled</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if booking.status == 'Confirmed' %}
+            <button class="btn btn-sm btn-danger cancel-booking-btn" data-id="{{ booking.id }}">Cancel</button>
+          {% else %}
+            <span class="text-muted">-</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+// Cancel booking AJAX
+function attachCancelHandlers() {
+  document.querySelectorAll('.cancel-booking-btn').forEach(btn => {
+    btn.onclick = function() {
+      if(confirm('Are you sure you want to cancel this booking?')) {
+        const bookingId = btn.getAttribute('data-id');
+        fetch(`/cancel-booking/${bookingId}`, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if(data.success) {
+            // Update status in row
+            const row = btn.closest('tr');
+            row.setAttribute('data-status', 'Canceled');
+            row.querySelector('td:nth-child(5)').innerHTML = '<span class="badge bg-secondary">Canceled</span>';
+            btn.remove();
+            showToast('Booking canceled successfully.');
+            filterCanceled();
+          } else {
+            showToast('Failed to cancel booking.');
+          }
+        });
+      }
+    }
+  });
+}
+function showToast(msg) {
+  let toast = document.createElement('div');
+  toast.className = 'toast align-items-center text-bg-success border-0 show position-fixed bottom-0 end-0 m-4';
+  toast.role = 'alert';
+  toast.innerHTML = `<div class="d-flex"><div class="toast-body">${msg}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+// Filter canceled bookings
+const showCanceled = document.getElementById('showCanceled');
+function filterCanceled() {
+  const show = showCanceled.checked;
+  document.querySelectorAll('#bookingsTable tbody tr').forEach(row => {
+    if(row.getAttribute('data-status') === 'Canceled') {
+      row.style.display = show ? '' : 'none';
+    }
+  });
+}
+showCanceled.addEventListener('change', filterCanceled);
+attachCancelHandlers();
+filterCanceled();
+</script>
+{% endblock %}

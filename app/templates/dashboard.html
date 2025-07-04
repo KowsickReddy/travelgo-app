@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4 text-primary">Your Bookings</h2>
+
+<div class="mb-3 d-flex flex-wrap align-items-center gap-3">
+  <label class="form-label mb-0 me-2">Filter by status:</label>
+  <select id="statusFilter" class="form-select w-auto">
+    <option value="">All</option>
+    <option value="Confirmed">Confirmed</option>
+    <option value="Pending">Pending</option>
+    <option value="Cancelled">Cancelled</option>
+    <option value="Failed">Failed</option>
+  </select>
+</div>
+
+{% if bookings %}
+<div class="table-responsive">
+  <table class="table table-hover align-middle" id="bookingsTable">
+    <thead class="table-light">
+      <tr>
+        <th>Service</th>
+        <th>Date</th>
+        <th>Guests</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Payment</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+      <tr data-status="{{ booking.status }}">
+        <td>{{ booking.category|capitalize }}<br><span class="text-muted small">{{ booking.destination }}</span></td>
+        <td>{{ booking.date }}</td>
+        <td>{{ booking.guests }}</td>
+        <td>₹{{ booking.amount or '-' }}</td>
+        <td>
+          {% if booking.status == 'Confirmed' %}
+            <span class="badge bg-success">Confirmed</span>
+          {% elif booking.status == 'Pending' %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% elif booking.status == 'Cancelled' %}
+            <span class="badge bg-secondary">Cancelled</span>
+          {% else %}
+            <span class="badge bg-danger">{{ booking.status }}</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if booking.payment and booking.payment.status == 'Success' %}
+            <span class="badge bg-success">Paid</span>
+          {% elif booking.payment and booking.payment.status == 'Refunded' %}
+            <span class="badge bg-info text-dark">Refunded</span>
+          {% else %}
+            <span class="badge bg-warning text-dark">Unpaid</span>
+          {% endif %}
+        </td>
+        <td>
+          <div class="btn-group" role="group">
+            {% if booking.status == 'Confirmed' %}
+              <form method="POST" action="{{ url_for('booking.cancel_booking', booking_id=booking.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-outline-danger btn-sm" title="Cancel Booking"><i class="fa fa-times"></i></button>
+              </form>
+            {% elif booking.status == 'Cancelled' and booking.payment and booking.payment.status == 'Success' %}
+              <button class="btn btn-outline-info btn-sm refund-btn" title="Request Refund" data-booking-id="{{ booking.id }}"><i class="fa fa-undo"></i></button>
+            {% endif %}
+            <a href="{{ url_for('booking.confirmation', booking_id=booking.id) }}" class="btn btn-outline-primary btn-sm" title="View Details"><i class="fa fa-eye"></i></a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+  <p>You haven't made any bookings yet.</p>
+{% endif %}
+
+<script>
+// Filter bookings by status
+const statusFilter = document.getElementById('statusFilter');
+const tableRows = document.querySelectorAll('#bookingsTable tbody tr');
+statusFilter.addEventListener('change', function() {
+  const val = this.value;
+  tableRows.forEach(row => {
+    if (!val || row.getAttribute('data-status') === val) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+// Refund button (AJAX placeholder)
+document.querySelectorAll('.refund-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const bookingId = this.getAttribute('data-booking-id');
+    alert('Refund requested for booking #' + bookingId + ' (AJAX logic to be implemented)');
+  });
+});
+</script>
+{% endblock %}

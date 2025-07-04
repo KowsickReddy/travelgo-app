@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="category-banner mb-4" style="background:#e0e7ff;height:60px;border-radius:18px;"></div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="text-primary fw-bold">Available Trains</h2>
+  <a href="{{ url_for('services.services') }}" class="btn btn-secondary">Back to Services</a>
+</div>
+<div class="row g-4">
+  {% for item in options %}
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm p-3 d-flex flex-column justify-content-between">
+      <div>
+        <h5 class="card-title fw-bold text-primary">{{ item.name }}</h5>
+        <div class="mb-2 text-success fs-5">₹{{ "{:,}".format(item.price) }}</div>
+        <div class="mb-2"><span class="text-warning">&#9733;</span> {{ item.rating }}</div>
+        <div class="mb-2 small text-muted">{{ item.type }} | {{ item.timing }}</div>
+        <div class="mb-2">From <b>{{ from_location }}</b> → <b>{{ destination }}</b></div>
+        <ul class="list-unstyled mb-2">
+          <li><i class="fa fa-snowflake text-info me-1"></i> AC/Non-AC</li>
+        </ul>
+      </div>
+      <a href="{{ url_for('main.book_service', service='train', id=item.id) }}" class="btn btn-primary mt-2">Book Now</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

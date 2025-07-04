@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4 text-primary">Choose a Service to Book</h2>
+<div class="row justify-content-center">
+  {% for s in services %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm text-center">
+      <div class="card-body">
+        <i class="fas {{ s.icon }} fa-3x mb-3 text-primary"></i>
+        <h5 class="card-title">{{ s.title }}</h5>
+        <a href="{{ url_for('main.book_category', category=(s.category[:-1] if s.category.endswith('s') else s.category)) }}" class="btn btn-primary mt-2">Book {{ s.title }}</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

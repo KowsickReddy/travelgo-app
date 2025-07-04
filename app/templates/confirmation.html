@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width:500px;background:rgba(255,255,255,0.98);">
+    <div class="card-header bg-success text-white rounded-top-4 d-flex align-items-center">
+      <i class="fa fa-check-circle me-2 fs-4"></i>
+      <span class="fw-bold fs-5">Booking Confirmed</span>
+    </div>
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-2 text-success">Thank you for your booking!</h5>
+      <p class="mb-2">Your booking for <span class="fw-bold text-primary">{{ service.name }}</span> is confirmed.</p>
+      <p class="mb-2">Booking ID: <span class="fw-bold">{{ booking.id }}</span></p>
+      <p class="mb-2">Amount Paid: <span class="fw-bold text-success">₹{{ booking.amount }}</span></p>
+      <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary w-100 mt-3 py-2 fs-5"><i class="fa fa-list me-2"></i>View My Bookings</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

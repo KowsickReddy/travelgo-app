@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4 text-primary">Book {{ category|capitalize }}</h2>
+<div class="row">
+  {% for item in options %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title fw-bold">{{ item.name }}</h5>
+        <div class="mb-2 small text-muted">{{ item.category|capitalize }}</div>
+        <div class="mb-2">
+          <span class="fw-bold text-success">₹{{ "{:,}".format(item.price) }}</span>
+          <span class="ms-2 text-warning">
+          </span>
+        </div>
+        <p class="small mb-2">{{ item.description }}</p>
+        <form method="POST" action="{{ url_for('main.book_category', category=category) }}" class="mt-auto">
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

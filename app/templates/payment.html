@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width:500px;background:rgba(255,255,255,0.98);">
+    <div class="card-header bg-primary text-white rounded-top-4 d-flex align-items-center">
+      <i class="fa fa-credit-card me-2 fs-4"></i>
+      <span class="fw-bold fs-5">Payment</span>
+    </div>
+    <div class="card-body p-4">
+      <h5 class="fw-bold mb-2 text-primary">Booking for: {{ service.name }}</h5>
+      <div class="mb-2 text-muted">Date: {{ booking.date }}</div>
+      <div class="mb-2 text-muted">Amount: <span class="fw-bold text-success">₹{{ booking.amount }}</span></div>
+      <form method="POST" id="paymentForm">
+        <div class="mb-3">
+          <label for="paymentMethod" class="form-label">Select Payment Method</label>
+          <select class="form-select" id="paymentMethod" name="payment_method" required>
+            <option value="UPI">UPI</option>
+            <option value="Card">Credit/Debit Card</option>
+            <option value="NetBanking">Net Banking</option>
+            <option value="Wallet">Wallet</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" id="payBtn">
+          <span id="payBtnSpinner" class="spinner-border spinner-border-sm me-2" style="display:none;"></span>
+          Pay Now
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+document.getElementById('paymentForm').onsubmit = function(e) {
+  var payBtn = document.getElementById('payBtn');
+  var spinner = document.getElementById('payBtnSpinner');
+  payBtn.disabled = true;
+  spinner.style.display = '';
+};
+</script>
+{% endblock %}

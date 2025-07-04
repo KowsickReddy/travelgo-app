@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="row align-items-center" style="min-height:70vh;">
+    <div class="col-lg-6 mb-5 mb-lg-0">
+      <div class="ps-lg-5">
+        <h1 class="fw-bold display-3 text-primary mb-3" style="letter-spacing:1.5px;">TravelGo</h1>
+        <p class="lead mb-4 text-secondary fs-4">Book. Explore. Experience.<br>Your journey starts here.</p>
+        <ul class="list-unstyled text-muted fs-5 mt-4">
+          <li class="mb-2"><i class="fa fa-check-circle text-success me-2"></i> All-in-one travel booking</li>
+          <li class="mb-2"><i class="fa fa-check-circle text-success me-2"></i> Best deals on hotels, flights, trains, buses</li>
+          <li class="mb-2"><i class="fa fa-check-circle text-success me-2"></i> Secure, fast, and easy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-6 d-flex justify-content-center">
+      <div class="card shadow rounded-4 p-4 border-0 w-100" style="max-width:420px;background:rgba(255,255,255,0.97);">
+        <form method="GET" action="{{ url_for('services.services') }}">
+          <h4 class="fw-bold text-center mb-4 text-primary">Plan Your Trip</h4>
+          <div class="row g-3 align-items-end">
+            <div class="col-12">
+              <label for="from_location" class="form-label">From</label>
+              <input type="text" class="form-control form-control-lg" id="from_location" name="from_location" placeholder="Departure City" required>
+            </div>
+            <div class="col-12">
+              <label for="destination" class="form-label">To</label>
+              <input type="text" class="form-control form-control-lg" id="destination" name="destination" placeholder="Destination City" required>
+            </div>
+            <div class="col-12">
+              <label for="date" class="form-label">Date</label>
+              <input type="date" class="form-control form-control-lg" id="date" name="date" required>
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+body {
+  background: linear-gradient(120deg, #e0e7ff 0%, #f6f8fa 100%);
+}
+</style>
+{% endblock %}

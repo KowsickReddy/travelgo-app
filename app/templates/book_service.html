@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width:500px;background:rgba(255,255,255,0.98);">
+    <div class="card-header bg-primary text-white rounded-top-4 d-flex align-items-center">
+      <i class="fa fa-ticket-alt me-2 fs-4"></i>
+      <span class="fw-bold fs-5">Booking</span>
+    </div>
+    <div class="card-body p-4">
+      <h4 class="fw-bold mb-2 text-primary"><i class="fa fa-ticket-alt me-2 text-warning"></i>{{ service.name }}</h4>
+      <p class="mb-2 text-muted">{{ service.description }}</p>
+      <div class="mb-3 d-flex align-items-center justify-content-between">
+        <span class="fw-bold text-success fs-5">₹{{ service.price }}</span>
+      </div>
+      <form method="POST">
+        <div class="mb-3">
+          <label for="guests" class="form-label">Guests</label>
+          <input type="number" class="form-control" id="guests" name="guests" min="1" max="10" value="1" required>
+        </div>
+        <div class="mb-3">
+          <label for="date" class="form-label">Date</label>
+          <input type="date" class="form-control" id="date" name="date" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-3 py-2 fs-5"><i class="fa fa-arrow-right me-2"></i>Proceed to Payment</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

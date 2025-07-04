@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-5">
+  <div class="col-md-7">
+    <h1 class="fw-bold">About TravelGo</h1>
+    <p>TravelGo is your one-stop platform for booking travel and accommodation across India. We solve the hassle of searching, comparing, and booking hotels, buses, trains, flights, and cabs—all in one place.</p>
+    <ul>
+      <li>Aggregates top travel and stay options</li>
+      <li>Secure, seamless, and fast booking</li>
+      <li>Trusted by thousands of travelers</li>
+      <li>24x7 customer support</li>
+    </ul>
+  </div>
+  <div class="col-md-5 text-center">
+    <img src="https://source.unsplash.com/300x300/?travel,team" class="img-fluid rounded-circle shadow" alt="Team">
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body text-center">
+        <i class="fas fa-bullseye fa-2x text-primary mb-2"></i>
+        <h5 class="fw-bold">Our Mission</h5>
+        <p>To make travel planning and booking effortless, affordable, and enjoyable for everyone.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body text-center">
+        <i class="fas fa-users fa-2x text-success mb-2"></i>
+        <h5 class="fw-bold">Why Choose Us?</h5>
+        <p>We offer a wide range of travel services, exclusive deals, and a user-friendly experience. Our platform is designed for convenience, transparency, and reliability.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row text-center mb-5">
+  <div class="col-4">
+    <i class="fas fa-suitcase-rolling fa-2x text-primary mb-2"></i>
+    <h2 class="counter" data-count="500">0</h2>
+    <p>Bookings</p>
+  </div>
+  <div class="col-4">
+    <i class="fas fa-map-marked-alt fa-2x text-success mb-2"></i>
+    <h2 class="counter" data-count="100">0</h2>
+    <p>Destinations</p>
+  </div>
+  <div class="col-4">
+    <i class="fas fa-headset fa-2x text-warning mb-2"></i>
+    <h2 class="counter" data-count="24">0</h2>
+    <p>Support (hrs)</p>
+  </div>
+</div>
+<script>
+document.querySelectorAll('.counter').forEach(function(counter) {
+  let updateCount = function() {
+    let target = +counter.getAttribute('data-count');
+    let count = +counter.innerText;
+    let inc = Math.ceil(target / 100);
+    if(count < target) {
+      counter.innerText = count + inc;
+      setTimeout(updateCount, 20);
+    } else {
+      counter.innerText = target;
+    }
+  };
+  updateCount();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,114 @@
+body {
+    background-color: #f6f8fa;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #222;
+}
+
+h1, h2, .fw-bold {
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+.navbar {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #fff;
+}
+
+.card {
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(13,110,253,0.07);
+    border: none;
+}
+
+.card-body {
+    padding: 1.7rem 1.5rem;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary, .btn-outline-primary {
+    box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+}
+
+.btn-outline-primary.active, .btn-outline-primary:active, .btn-outline-primary:focus, .btn-outline-primary:hover {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.form-control-lg {
+    border-radius: 10px;
+    font-size: 1.1rem;
+    padding: 0.75rem 1rem;
+}
+
+.alert {
+    margin-top: 15px;
+}
+
+#searchResults {
+    min-height: 200px;
+}
+
+.sidebar {
+    min-height: 100vh;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    padding-top: 2rem;
+}
+.sidebar .nav-link.active {
+    background: #0d6efd;
+    color: #fff !important;
+    font-weight: 600;
+}
+@media (max-width: 991.98px) {
+    .sidebar {
+        min-height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        padding-top: 0.5rem;
+    }
+}
+@media (max-width: 600px) {
+    .card {
+        padding: 1rem 0.5rem;
+    }
+    .navbar-brand {
+        font-size: 1.2rem !important;
+    }
+}
+/* Profile image */
+.rounded-circle {
+    object-fit: cover;
+}
+.timeline .row > div {
+    position: relative;
+}
+.timeline .row > div:before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    background: #e5e7eb;
+    border-radius: 3px;
+    z-index: 0;
+}
+.timeline .row > div:first-child:before {
+    top: 50%;
+    height: 50%;
+}
+.timeline .row > div:last-child:before {
+    height: 50%;
+}

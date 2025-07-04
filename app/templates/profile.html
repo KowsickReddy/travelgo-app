@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+{# Start: Profile Info #}
+<div class="row">
+  <div class="col-md-4 text-center">
+    <img src="https://randomuser.me/api/portraits/men/1.jpg" class="rounded-circle shadow mb-3" width="120" height="120" alt="Profile">
+    <h4 class="fw-bold" id="profileUsername">{{ user.username }}</h4>
+    <p class="text-muted" id="profileEmail">{{ user.email }}</p>
+    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</button>
+  </div>
+  <div class="col-md-8">
+    <ul class="list-group mb-3">
+      <li class="list-group-item"><strong>Contact:</strong> <span id="profileContact">{{ user.contact or 'N/A' }}</span></li>
+      <li class="list-group-item"><strong>Joined:</strong> {{ user.created_at.strftime('%d %b %Y') if user.created_at else 'N/A' }}</li>
+    </ul>
+    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
+  </div>
+</div>
+{# Edit Profile Modal #}
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="editProfileForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}">
+          </div>
+          <div class="mb-3">
+            <label for="contact" class="form-label">Contact</label>
+            <input type="text" class="form-control" id="contact" name="contact" value="{{ user.contact or '' }}">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{# Change Password Modal #}
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="changePasswordForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="oldPassword" class="form-label">Old Password</label>
+            <input type="password" class="form-control" id="oldPassword" name="old_password">
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="newPassword" name="new_password">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Change Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+// Profile update AJAX
+const editProfileForm = document.getElementById('editProfileForm');
+editProfileForm.onsubmit = function(e) {
+  e.preventDefault();
+  const formData = new FormData(editProfileForm);
+  fetch("{{ url_for('dashboard.update_profile') }}", {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success) {
+      document.getElementById('profileUsername').textContent = data.username;
+      document.getElementById('profileContact').textContent = data.contact || 'N/A';
+      showToast('Profile updated successfully.');
+      var modal = bootstrap.Modal.getInstance(document.getElementById('editProfileModal'));
+      modal.hide();
+    } else {
+      showToast('Failed to update profile.');
+    }
+  });
+};
+// Password change AJAX
+const changePasswordForm = document.getElementById('changePasswordForm');
+changePasswordForm.onsubmit = function(e) {
+  e.preventDefault();
+  const formData = new FormData(changePasswordForm);
+  fetch("{{ url_for('dashboard.change_password') }}", {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.success) {
+      showToast('Password changed successfully.');
+      var modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+      modal.hide();
+      changePasswordForm.reset();
+    } else {
+      showToast(data.message || 'Failed to change password.');
+    }
+  });
+};
+function showToast(msg) {
+  let toast = document.createElement('div');
+  toast.className = 'toast align-items-center text-bg-success border-0 show position-fixed bottom-0 end-0 m-4';
+  toast.role = 'alert';
+  toast.innerHTML = `<div class="d-flex"><div class="toast-body">${msg}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+</script>
+{% endblock %}

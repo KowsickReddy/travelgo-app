@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+{# Travel details banner #}
+{% if from_location and destination and date %}
+<div class="alert alert-info text-center mb-4 shadow-sm">
+  <strong>Travel Details:</strong>
+  <span class="mx-2">From <b>{{ from_location }}</b></span>
+  <span class="mx-2">To <b>{{ destination }}</b></span>
+  <span class="mx-2">Date: <b>{{ date }}</b></span>
+</div>
+{% endif %}
+
+<h2 class="mb-4 text-primary text-center">Choose a Travel Service</h2>
+<div class="row justify-content-center g-4">
+  {% for cat in categories %}
+  <div class="col-6 col-md-4 col-lg-2">
+    <a href="{{ url_for('services.services') }}?category={{ cat.key }}{% if from_location %}&from_location={{ from_location }}{% endif %}{% if destination %}&destination={{ destination }}{% endif %}{% if date %}&date={{ date }}{% endif %}" class="text-decoration-none service-card d-flex flex-column align-items-center p-3 shadow-sm bg-white rounded-4 h-100">
+      {% if cat.key == 'bus' %}
+        <i class="fa fa-bus fa-2x text-primary mb-2"></i>
+      {% elif cat.key == 'train' %}
+        <i class="fa fa-train fa-2x text-primary mb-2"></i>
+      {% elif cat.key == 'cab' %}
+        <i class="fa fa-taxi fa-2x text-primary mb-2"></i>
+      {% elif cat.key == 'hotel' %}
+        <i class="fa fa-hotel fa-2x text-primary mb-2"></i>
+      {% elif cat.key == 'air' %}
+        <i class="fa fa-plane fa-2x text-primary mb-2"></i>
+      {% endif %}
+      <span class="fw-bold text-dark">{{ cat.name }}</span>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+<style>
+.service-card:hover {
+  transform: translateY(-7px) scale(1.04);
+  box-shadow: 0 8px 32px rgba(13,110,253,0.13);
+}
+</style>
+{% endblock %}
