@@ -46,7 +46,7 @@
           {% endif %}
         </td>
         <td>
-          {% if booking.payment and booking.payment.status == 'Success' %}
+          {% if booking.payment and booking.payment.status == 'success' %}
             <span class="badge bg-success">Paid</span>
           {% elif booking.payment and booking.payment.status == 'Refunded' %}
             <span class="badge bg-info text-dark">Refunded</span>
@@ -60,7 +60,7 @@
               <form method="POST" action="{{ url_for('booking.cancel_booking', booking_id=booking.id) }}" style="display:inline;">
                 <button type="submit" class="btn btn-outline-danger btn-sm" title="Cancel Booking"><i class="fa fa-times"></i></button>
               </form>
-            {% elif booking.status == 'Cancelled' and booking.payment and booking.payment.status == 'Success' %}
+            {% elif booking.status == 'Cancelled' and booking.payment and booking.payment.status == 'success' %}
               <button class="btn btn-outline-info btn-sm refund-btn" title="Request Refund" data-booking-id="{{ booking.id }}"><i class="fa fa-undo"></i></button>
             {% endif %}
             <a href="{{ url_for('booking.confirmation', booking_id=booking.id) }}" class="btn btn-outline-primary btn-sm" title="View Details"><i class="fa fa-eye"></i></a>

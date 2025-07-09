@@ -3,7 +3,7 @@
 <div class="category-banner mb-4" style="background:#e0e7ff;height:60px;border-radius:18px;"></div>
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h2 class="text-primary fw-bold">Available Hotels</h2>
-  <a href="{{ url_for('services.services') }}" class="btn btn-secondary">Back to Services</a>
+  <a href="{{ url_for('services.services', from_location=from_location, destination=destination, date=date) }}" class="btn btn-secondary">Back to Services</a>
 </div>
 <div class="row g-4">
   {% for item in options %}
@@ -16,10 +16,13 @@
         <div class="mb-2 small text-muted">{{ item.type }}</div>
         <div class="mb-2">Location: <b>{{ item.location }}</b></div>
         <ul class="list-unstyled mb-2">
+          <li><i class="fa fa-wifi text-info me-1"></i> Free WiFi</li>
+          <li><i class="fa fa-swimmer text-info me-1"></i> Swimming Pool</li>
+          <li><i class="fa fa-utensils text-info me-1"></i> Complimentary Breakfast</li>
           <li><i class="fa fa-star text-info me-1"></i> 3-star/5-star</li>
         </ul>
       </div>
-      <a href="{{ url_for('main.book_service', service='hotel', id=item.id) }}" class="btn btn-primary mt-2">Book Now</a>
+      <a href="{{ url_for('booking.book_service', service_type='hotel', service_id=item.id) }}" class="btn btn-primary mt-2">Book Now</a>
     </div>
   </div>
   {% endfor %}

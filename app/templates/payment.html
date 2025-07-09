@@ -1,3 +1,4 @@
+<!-- filepath: e:\TravelGo2\app\templates\payment.html -->
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-5">
@@ -14,11 +15,48 @@
         <div class="mb-3">
           <label for="paymentMethod" class="form-label">Select Payment Method</label>
           <select class="form-select" id="paymentMethod" name="payment_method" required>
+            <option value="">--Select--</option>
             <option value="UPI">UPI</option>
             <option value="Card">Credit/Debit Card</option>
             <option value="NetBanking">Net Banking</option>
             <option value="Wallet">Wallet</option>
           </select>
+        </div>
+        <div id="cardFields" style="display:none;">
+          <div class="mb-3">
+            <label class="form-label">Card Number</label>
+            <input type="text" class="form-control" name="card_number" maxlength="16" pattern="\d{16}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Expiry (MM/YY)</label>
+            <input type="text" class="form-control" name="expiry" maxlength="5" pattern="\d{2}/\d{2}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">CVV</label>
+            <input type="password" class="form-control" name="cvv" maxlength="3" pattern="\d{3}">
+          </div>
+        </div>
+        <div id="upiFields" style="display:none;">
+          <div class="mb-3">
+            <label class="form-label">UPI VPA</label>
+            <input type="text" class="form-control" name="vpa" placeholder="yourname@bank">
+          </div>
+        </div>
+        <div id="netbankingFields" style="display:none;">
+          <div class="mb-3">
+            <label class="form-label">Bank Name</label>
+            <input type="text" class="form-control" name="bank_name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Account Number</label>
+            <input type="text" class="form-control" name="account_number">
+          </div>
+        </div>
+        <div id="walletFields" style="display:none;">
+          <div class="mb-3">
+            <label class="form-label">Wallet ID</label>
+            <input type="text" class="form-control" name="wallet_id">
+          </div>
         </div>
         <button type="submit" class="btn btn-primary w-100" id="payBtn">
           <span id="payBtnSpinner" class="spinner-border spinner-border-sm me-2" style="display:none;"></span>
@@ -29,6 +67,23 @@
   </div>
 </div>
 <script>
+function setRequired(fields, required) {
+  fields.forEach(function(name) {
+    var el = document.querySelector('[name="'+name+'"]');
+    if (el) el.required = required;
+  });
+}
+document.getElementById('paymentMethod').addEventListener('change', function() {
+  document.getElementById('cardFields').style.display = this.value === 'Card' ? '' : 'none';
+  document.getElementById('upiFields').style.display = this.value === 'UPI' ? '' : 'none';
+  document.getElementById('netbankingFields').style.display = this.value === 'NetBanking' ? '' : 'none';
+  document.getElementById('walletFields').style.display = this.value === 'Wallet' ? '' : 'none';
+
+  setRequired(['card_number','expiry','cvv'], this.value === 'Card');
+  setRequired(['vpa'], this.value === 'UPI');
+  setRequired(['bank_name','account_number'], this.value === 'NetBanking');
+  setRequired(['wallet_id'], this.value === 'Wallet');
+});
 document.getElementById('paymentForm').onsubmit = function(e) {
   var payBtn = document.getElementById('payBtn');
   var spinner = document.getElementById('payBtnSpinner');
