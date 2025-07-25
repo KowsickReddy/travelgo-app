@@ -1,7 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask_mail import Message
 from ..models import db, User
 from ..forms import LoginForm, RegisterForm
+from .. import mail  # 🔁 Make sure mail is initialized in __init__.py
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -32,10 +34,25 @@ def sign_up():
             user = User(username=form.username.data, email=form.email.data, password=hashed_pw)
             db.session.add(user)
             db.session.commit()
+
             session['user_id'] = user.id
             session['username'] = user.username
             session['email'] = user.email
-            flash('Account created! You are now logged in.', 'success')
+
+            # ✅ Send confirmation email
+            msg = Message(
+                subject='Welcome to TravelGo!',
+                sender='your-sender-email@example.com',  # 🛠️ Update this
+                recipients=[user.email]
+            )
+            msg.body = f"Hi {user.username},\n\nThank you for registering with TravelGo!\nHappy journey booking!\n\n- TravelGo Team"
+            try:
+                mail.send(msg)
+                flash('Account created and confirmation email sent!', 'success')
+            except Exception as e:
+                flash('Account created, but failed to send confirmation email.', 'warning')
+                print(f"Email send error: {e}")
+
             return redirect(url_for('main.index'))
     return render_template('sign_up.html', form=form)
 

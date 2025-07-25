@@ -3,8 +3,47 @@ from ..models import db, Booking, Payment, Service
 from ..forms import PaymentForm
 from flask import current_app
 from datetime import datetime
+import boto3
+from botocore.exceptions import ClientError
 
 booking_bp = Blueprint('booking', __name__)
+
+def send_booking_confirmation_email(to_email, booking, service):
+    ses_client = boto3.client(
+        'ses',
+        region_name='us-east-1',  # Update if using a different region
+        aws_access_key_id='YOUR_AWS_ACCESS_KEY',
+        aws_secret_access_key='YOUR_AWS_SECRET_KEY'
+    )
+
+    subject = "Booking Confirmation"
+    body_text = f"""
+    Dear Customer,
+
+    Your booking for {service.name} on {booking.date.strftime('%d-%m-%Y')} has been confirmed.
+
+    Booking ID: {booking.id}
+    Service: {service.name}
+    Guests: {booking.guests}
+    Amount Paid: ₹{booking.amount}
+
+    Thank you for booking with TravelGo!
+
+    Regards,
+    TravelGo Team
+    """
+
+    try:
+        response = ses_client.send_email(
+            Source='your_verified_email@example.com',
+            Destination={'ToAddresses': [to_email]},
+            Message={
+                'Subject': {'Data': subject},
+                'Body': {'Text': {'Data': body_text}}
+            }
+        )
+    except ClientError as e:
+        print(f"Email sending failed: {e.response['Error']['Message']}")
 
 @booking_bp.route('/book/<service_type>/<int:service_id>', methods=['GET', 'POST'])
 def book_service(service_type, service_id):
@@ -37,13 +76,12 @@ def book_service(service_type, service_id):
             destination=service.name,
             date=date,
             guests=guests,
-            status='Pending',   # Not confirmed yet
-            paid=False,         # Not paid yet
+            status='Pending',
+            paid=False,
             amount=total_price
         )
         db.session.add(booking)
         db.session.commit()
-        # Always redirect to payment page
         return redirect(url_for('booking.payment', booking_id=booking.id))
     return render_template('book_service.html', service=service)
 
@@ -52,7 +90,6 @@ def payment(booking_id):
     booking = Booking.query.get_or_404(booking_id)
     service = Service.query.get(booking.service_id)
     if booking.paid:
-        # If already paid, redirect to confirmation
         return redirect(url_for('booking.confirmation', booking_id=booking.id))
     if request.method == 'POST':
         method = request.form.get('payment_method')
@@ -63,7 +100,6 @@ def payment(booking_id):
         bank_name = request.form.get('bank_name')
         account_number = request.form.get('account_number')
         wallet_id = request.form.get('wallet_id')
-        # Server-side validation
         if method == 'Card':
             if not (card_number and expiry and cvv):
                 flash('Please enter all card details.', 'danger')
@@ -83,7 +119,6 @@ def payment(booking_id):
         else:
             flash('Please select a payment method.', 'danger')
             return render_template('payment.html', booking=booking, service=service)
-        # If all required fields are present, consider payment successful
         payment = Payment(
             user_id=booking.user_id,
             service_type=booking.category,
@@ -95,14 +130,15 @@ def payment(booking_id):
         )
         db.session.add(payment)
         db.session.commit()
-        # Update booking as paid and confirmed
         booking.status = 'Confirmed'
         booking.paid = True
         booking.payment_method = method
         booking.payment_id = payment.id
         db.session.commit()
-        # Refresh booking to ensure latest state
         db.session.refresh(booking)
+        user_email = session.get('user_email')
+        if user_email:
+            send_booking_confirmation_email(user_email, booking, service)
         flash('Payment successful! Booking confirmed.', 'success')
         return redirect(url_for('booking.confirmation', booking_id=booking.id))
     return render_template('payment.html', booking=booking, service=service)
@@ -135,6 +171,5 @@ def user_bookings():
         return redirect(url_for('auth.login'))
     user_id = session['user_id']
     bookings = Booking.query.filter_by(user_id=user_id).order_by(Booking.date.desc()).all()
-    # Optionally join with Service for details
     services = {s.id: s for s in Service.query.all()}
     return render_template('bookings.html', bookings=bookings, services=services)
