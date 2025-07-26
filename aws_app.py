@@ -12,7 +12,7 @@ app.secret_key = 'travelgo2_secret_key_2025'
 # AWS Config
 AWS_REGION = 'us-east-1'
 SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:851725243544:travelgo'  # replace with your actual ARN
-SES_SENDER_EMAIL = 'verified-sender@example.com'  # must be verified in SES
+#SES_SENDER_EMAIL = 'verified-sender@example.com'  # must be verified in SES
 
 # DynamoDB table names
 USERS_TABLE = 'travelgo2_user'
