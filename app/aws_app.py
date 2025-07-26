@@ -8,7 +8,7 @@ USERS_TABLE = 'travelgo_user'
 SERVICE_TABLE = 'travelgo_service'
 BOOKING_TABLE = 'travelgo_booking'
 PAYMENT_TABLE = 'travelgo_payment'
-SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:xxxx:stocker_alerts'
+SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:851725243544:travelgo'
 SES_SENDER_EMAIL = 'verified-sender@example.com'
 
 # AWS clients
